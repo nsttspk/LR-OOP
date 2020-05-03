@@ -1,0 +1,92 @@
+#include <iostream>
+using namespace std;
+
+class Fireplaces {
+protected:
+	int quantity;
+	int view;
+	char* name;
+public:
+	Fireplaces(){}
+	Fireplaces(int quantity, int view, char* name) : quantity(quantity), view(view), name(name) {}
+	void input(int qua, int vie, char* nam);
+	void print();
+};
+void Fireplaces::input(int qua, int vie, char* nam) {
+	quantity = qua;
+	view = vie;
+	name = new char[strlen(nam) + 1];
+	strcpy(name, nam);
+}
+void Fireplaces::print() {
+	cout << "quantity = " << quantity << endl << "view = " << view << endl << "name = " << name << endl;
+}
+
+
+class Fire :public Fireplaces {
+private:
+	double brightness;
+	float heat;
+public:
+	Fire(){}
+	Fire(int quantity, int view, char* name, double brightness, float heat) : Fireplaces(quantity, view, name), brightness(brightness), heat(heat) {}
+	void input(int quantity, int view, char* name, double brightness, float heat);
+	void print();
+	void operator =(const Fire& f);
+	Fire operator +(const Fire& f);
+	Fire operator *(const Fire& f);
+};
+void Fire::input(int quantity, int view, char* name, double brightness, float heat) {
+	Fireplaces::quantity = quantity;
+	Fireplaces::view = view;
+	Fireplaces::name = new char[strlen(name) + 1];
+	strcpy(Fireplaces::name, name);
+	this->brightness = brightness;
+	this->heat = heat;
+}
+void Fire::print() {
+	cout << "quantity = " << Fireplaces::quantity << endl << "view = " << Fireplaces::view 
+		<< endl << "name = " << Fireplaces::name << endl << "brightness = " << brightness 
+		<< endl << "heat = " << heat << endl;
+}
+void Fire::operator =(const Fire& f) {
+	quantity = f.quantity;
+	view = f.view;
+	name = new char[strlen(f.name) + 1];
+	strcpy(name, f.name);
+	brightness = f.brightness;
+	heat = f.heat;
+}
+Fire Fire::operator +(const Fire& f) {
+	Fire fire1(this->quantity + f.quantity, this->view + f.view, strcat(this->name, f.name), this->brightness + f.brightness, this->heat + f.heat);
+	return fire1;
+}
+Fire Fire::operator *(const Fire& f) {
+	Fire fire1(this->quantity * f.quantity, this->view * f.view, strcat(this->name, f.name), this->brightness * f.brightness, this->heat * f.heat);
+	return fire1;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	char text1[100]; cout << "text1 = "; cin >> text1;
+	char text2[100]; cout << "text2 = "; cin >> text2;
+	Fire fire1(10, 20, text1, 18.09, 3);
+	Fire fire2(2, 3, text2, 98.76, 653);
+	Fire fire3;
+	Fire fire4;
+	cout << "Fire1:" << endl;
+	fire1.print();
+	cout << "Fire2:" << endl;
+	fire2.print();
+	cout << "Сложение:" << endl;
+	fire3 = fire1 + fire2;
+	cout << "Результат сложения:" << endl;
+	fire3.print();
+	cout << "Умножение:" << endl;
+	fire4 = fire1 * fire2;
+	cout << "Результат умножения:" << endl;
+	fire4.print();
+	system("pause");
+	return 0;
+}
