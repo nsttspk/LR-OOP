@@ -1,0 +1,115 @@
+#include <iostream>
+using namespace std;
+
+class Fireplaces {
+protected:
+	int quantity;
+	int view;
+	char* name;
+public:
+	Fireplaces(){}
+	Fireplaces(int quantity, int view, char* name) : quantity(quantity), view(view), name(name) {}
+	void input(int qua, int vie, char* nam);
+	void print();
+};
+void Fireplaces::input(int qua, int vie, char* nam) {
+	quantity = qua;
+	view = vie;
+	name = new char[strlen(nam) + 1];
+	strcpy(name, nam);
+}
+void Fireplaces::print() {
+	cout << "quantity = " << quantity << endl << "view = " << view << endl << "name = " << name << endl;
+}
+
+
+class Fire {
+protected:
+	double brightness;
+	float heat;
+public:
+	Fire(){}
+	Fire(double brightness, float heat) : brightness(brightness), heat(heat) {}
+	void input(int quantity, int view, char* name, double brightness, float heat);
+	void print();
+};
+void Fire::input(int quantity, int view, char* name, double brightness, float heat) {
+	this->brightness = brightness;
+	this->heat = heat;
+}
+void Fire::print() {
+	cout << "brightness = " << brightness << endl << "heat = " << heat << endl;
+}
+
+
+class Billets : public Fire, public Fireplaces {
+protected:
+	bool wet;
+	int count;
+public:
+	Billets(){}
+	Billets(int quantity, int view, char* name, double brightness, float heat, bool wet, int count) : Fireplaces(quantity, view, name), Fire(brightness, heat), wet(wet), count(count) {}
+	void input(int quantity, int view, char* name, double brightness, float heat, bool wet, int count);
+	void print();
+	void operator =(const Billets& b);
+	Billets operator +(const Billets& b);
+	Billets operator *(const Billets& b);
+};
+void Billets::input(int quantity, int view, char* name, double brightness, float heat, bool wet, int count) {
+	Fireplaces::quantity = quantity;
+	Fireplaces::view = view;
+	Fireplaces::name = new char[strlen(name) + 1];
+	strcpy(Fireplaces::name, name);
+	Fire::brightness = brightness;
+	Fire::heat = heat;
+	this->wet = wet;
+	this->count = count;
+}
+void Billets::print() {
+	cout << "quantity = " << quantity << endl << "view = " << view << endl << "name = " 
+		<< name << endl << "brightness = " << brightness << endl << "heat = " << heat 
+		<< endl << "wet = " << wet << endl << "count = " << count << endl;
+}
+void Billets::operator =(const Billets& b) {
+	quantity = b.quantity;
+	view = b.view;
+	name = new char[strlen(b.name) + 1];
+	strcpy(name, b.name);
+	brightness = b.brightness;
+	heat = b.heat;
+	wet = b.wet;
+	count = b.count;
+}
+Billets Billets::operator +(const Billets& b) {
+	Billets bil1(this->quantity + b.quantity, this->view + b.view, strcat(this->name, b.name), this->brightness + b.brightness, this->heat + b.heat, this->wet + b.wet, this->count + b.count);
+	return bil1;
+}
+Billets Billets::operator *(const Billets& b) {
+	Billets bil1(this->quantity * b.quantity, this->view * b.view, strcat(this->name, b.name), this->brightness * b.brightness, this->heat * b.heat, this->wet * b.wet, this->count * b.count);
+	return bil1;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	char text1[100]; cout << "text1 = "; cin >> text1;
+	char text2[100]; cout << "text2 = "; cin >> text2;
+	Billets bil1(10, 20, text1, 18.09, 3, 0, 10);
+	Billets bil2(2, 3, text2, 98.76, 653, 1, 900);
+	Billets bil3;
+	Billets bil4;
+	cout << "Bil1:" << endl;
+	bil1.print();
+	cout << "Bil2:" << endl;
+	bil2.print();
+	cout << "Сложение:" << endl;
+	bil3 = bil1 + bil2;
+	cout << "Результат сложения:" << endl;
+	bil3.print();
+	cout << "Умножение:" << endl;
+	bil4 = bil1 * bil2;
+	cout << "Результат умножения:" << endl;
+	bil4.print();
+	system("pause");
+	return 0;
+}
